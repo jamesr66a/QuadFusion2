@@ -45,56 +45,29 @@ void OpticalFlowSensor::loop(std::string device_file)
     float flow_x = 0, temp_flow_x = 0;
     float flow_y = 0, temp_flow_y = 0;
     uint8_t history = 0;
-    uint64_t timestamp = -1;
+    uint64_t timestamp = -1, base_timestamp = -1;
     while (1)
     {
         read(fd, buf, 1);
 
         if (mavlink_parse_char(0, buf[0], &msg, &status))
         {
-#ifdef DEBUG
-            printf("packet received\n");
-            printf("\nReceived packet: SYS: %d, COMP: %d, LEN: %d, MSG ID: %d\n", msg.sysid, msg.compid, msg.len, msg.msgid);
-#endif
-
-            if (msg.msgid == 100) {
-                if (history == 0)
+		if (history++ == 0)
 		{
-			timestamp = mavlink_msg_optical_flow_get_time_usec(&msg);	
-			//std::cout << timestamp << std::endl;
+			base_timestamp = mavlink_msg_optical_flow_get_time_usec(&msg);
 		}
 		else
 		{
-			uint64_t base_timestamp = timestamp;
 			timestamp = mavlink_msg_optical_flow_get_time_usec(&msg);
-			temp_flow_x = ((mavlink_msg_optical_flow_get_flow_comp_m_x(&msg)/(timestamp - base_timestamp))*10e8);
-                	temp_flow_y = ((mavlink_msg_optical_flow_get_flow_comp_m_y(&msg)/(timestamp-base_timestamp))*10e8);
-			if (history == 2)
-			{
-				flow_x = temp_flow_x;
-				flow_y = temp_flow_y;
-			}
-			else
-			{
-				flow_x = (flow_x + temp_flow_x)/2;
-				flow_y = (flow_y + temp_flow_y)/2;
-			}
-		}
-
-                history++;
-#ifdef DEBUG
-                printf("%i\n", history);
-#endif
-                if (history == 4) {
-                    data_points_mutex.lock();
-                    data_points.push(FlowData(flow_x, flow_y));
-	            ready.store(true);
-                    data_points_mutex.unlock();
-
-                    flow_x = flow_y = temp_flow_x = temp_flow_y = history = 0;
-                }
-            }
-        }
+			flow_x = mavlink_msg_optical_flow_get_flow_comp_m_x(&msg);
+			flow_y = mavlink_msg_optical_flow_get_flow_comp_m_y(&msg);
+			data_points_mutex.lock();
+			data_points.push(FlowData(flow_x, flow_y));
+			ready.store(true);
+			data_points_mutex.unlock();
+			history = 0;
+        	}
+	}
 	//std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 }
