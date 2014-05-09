@@ -1,0 +1,5 @@
+#!/bin/sh
+
+LOAD_OPENCV=$(ls /usr/local/lib/libopencv_* | grep -i libopencv_[^\.]*\.so\.2\.4$ | sed ':a;N;$!ba;s/\n/:/g')
+LD_PRELOAD="/usr/lib/libv4l/v4l2convert.so:$LOAD_OPENCV" ./$1
+

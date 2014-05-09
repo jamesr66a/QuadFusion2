@@ -1,0 +1,18 @@
+INCLUDE_FILES='-I/usr/include -I/usr/local/include'
+LIBRARY_FILES='-L/usr/local/lib'
+   
+LIBS='-lopencv_core
+      -lopencv_calib3d
+      -lopencv_contrib
+      -lopencv_features2d
+      -lopencv_flann
+      -lopencv_gpu
+      -lopencv_highgui
+      -lopencv_imgproc
+      -lopencv_legacy
+      -lopencv_ml
+      -lopencv_objdetect
+      -lopencv_video
+      -lopencv_nonfree'
+
+g++ $INCLUDE_FILES $LIBRARY_FILES -o $1 $1.cpp $LIBS 
