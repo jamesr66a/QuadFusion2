@@ -28,6 +28,7 @@
 #ifndef _AQ_PID_H_
 #define _AQ_PID_H_
 float currentTime;
+bool inFlight;
 enum {
   THROTTLE=0,
   PITCH,    
@@ -64,7 +65,7 @@ float constrain(float a, float x, float y){
 
 void zeroIntegralError() __attribute__ ((noinline));
 void zeroIntegralError() {
-  for (byte axis = 0; axis <= ATTITUDE_YAXIS_PID_IDX; axis++) {
+  for (unsigned char axis = 0; axis <= ROLL; axis++) {
     PID[axis].integratedError = 0;
     PID[axis].previousPIDTime = currentTime;
   }
