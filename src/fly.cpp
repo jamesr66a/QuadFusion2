@@ -29,7 +29,7 @@ int main()
 
     initGPIO(16,false);
     writeGPIO(16, true);
-    init GPIO(17,true);
+    initGPIO(17,true);
 
     while (true)
     {
