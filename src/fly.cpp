@@ -28,7 +28,7 @@ int main()
     initPID();
 
     initGPIO(16,false);
-    writeGpio(16, true);
+    writeGPIO(16, true);
     init GPIO(17,true);
 
     while (true)
