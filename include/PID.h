@@ -55,6 +55,21 @@ struct PIDdata {
 // ZDAMPENING = 9 (used in altitude hold to dampen vertical accelerations)
 //float windupGuard; // Read in from EEPROM
 //// Modified from http://www.arduino.cc/playground/Main/BarebonesPIDForEspresso
+
+float constrain(float a, float x, float y){
+  if(a>x&&a<y) return a;
+  if(a<x) return x;
+  if(a>y) return y;
+}
+
+void zeroIntegralError() __attribute__ ((noinline));
+void zeroIntegralError() {
+  for (byte axis = 0; axis <= ATTITUDE_YAXIS_PID_IDX; axis++) {
+    PID[axis].integratedError = 0;
+    PID[axis].previousPIDTime = currentTime;
+  }
+}
+
 float updatePID(float targetPosition, float currentPosition, struct PIDdata *PIDparameters) {
 
   // AKA PID experiments
@@ -76,19 +91,8 @@ float updatePID(float targetPosition, float currentPosition, struct PIDdata *PID
   return (PIDparameters->P * error) + (PIDparameters->I * PIDparameters->integratedError) + dTerm;
 }
 
-void zeroIntegralError() __attribute__ ((noinline));
-void zeroIntegralError() {
-  for (byte axis = 0; axis <= ATTITUDE_YAXIS_PID_IDX; axis++) {
-    PID[axis].integratedError = 0;
-    PID[axis].previousPIDTime = currentTime;
-  }
-}
 
-float constrain(float a, float x, float y){
-  if(a>x&&a<y) return a;
-  if(a<x) return x;
-  if(a>y) return y;
-}
+
 
 #endif // _AQ_PID_H_
 
