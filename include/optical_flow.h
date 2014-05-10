@@ -11,8 +11,9 @@
 struct FlowData{
     float flow_x;
     float flow_y;
-    FlowData(float flow_x, float flow_y)
-        : flow_x(flow_x), flow_y(flow_y)
+    float ground_distance;
+    FlowData(float flow_x, float flow_y, float ground_distance)
+        : flow_x(flow_x), flow_y(flow_y), ground_distance(ground_distance)
     {}
 	FlowData() {}
 };

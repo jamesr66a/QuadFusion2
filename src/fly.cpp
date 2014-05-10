@@ -28,8 +28,8 @@ int main()
     initPID();
 
     initGPIO(16,false);
-    writeGpio(16, true);
-    init GPIO(17,true);
+    writeGPIO(16, true);
+    initGPIO(17,true);
 
     while (true)
     {
@@ -56,7 +56,7 @@ int main()
 	    //	      << std::endl;
 	    x += fd.flow_x;
 	    y += fd.flow_y;
-	    std::cout << x << " " << y << std::endl;
+	    std::cout << x << " " << y << " " << gd.ground_distance << std::endl;
 	    //std::cout << std::chrono::nanoseconds(dt).count()/10e6 << std::endl;
 	}
 	if (cpe.dataAvailable())
@@ -67,8 +67,8 @@ int main()
    	    y = pose.y;
 	    
             if(firstRead){
-		std::chrono::steady_clock::time_point tpCurrent=std::chrono::steady_clock::now();
-	        currentTime=std::chrono::duration_cast<microseconds>(tpCurrent).count();
+		
+	        currentTime=getCurrentTime();
 
 		firstRead=false;
 
