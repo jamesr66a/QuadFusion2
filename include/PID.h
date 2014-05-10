@@ -74,6 +74,7 @@ void zeroIntegralError() {
 float updatePID(float targetPosition, float currentPosition, struct PIDdata *PIDparameters) {
 
   // AKA PID experiments
+  //TODO::set current time equal to a current time in ms
   const float deltaPIDTime = (currentTime - PIDparameters->previousPIDTime) / 1000000.0;
 
   PIDparameters->previousPIDTime = currentTime;  // AKA PID experiments
@@ -89,7 +90,27 @@ float updatePID(float targetPosition, float currentPosition, struct PIDdata *PID
   float dTerm = PIDparameters->D * (currentPosition - PIDparameters->lastError) / (deltaPIDTime * 100); // dT fix from Honk
   PIDparameters->lastError = currentPosition;
 
-  return (PIDparameters->P * error) + (PIDparameters->I * PIDparameters->integratedError) + dTerm;
+  return (PIDparameters->P * error) + (PIDparameters->I * PIDparameters->integratedError); //This does not include the dTerm
+
+}
+
+void initPID(){
+ PID[THROTTLE].P=1;
+ PID[THROTTLE].I=1;
+ PID[THROTTLE].D=1;
+ PID[THROTTLE].windupGuard=100;
+
+ PID[ROLL].P=1;
+ PID[ROLL].I=1;
+ PID[ROLL].D=1;
+ PID[ROLL].windupGuard=100;
+
+ PID[PITCH].P=1;
+ PID[PITCH].I=1;
+ PID[PITCH].D=1;
+ PID[PITCH].windupGuard=100;
+
+
 }
 
 

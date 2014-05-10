@@ -8,6 +8,8 @@
 #include "PID.h"
 #include "GPIO.h"
 
+float constain(float a, float x, float y);
+void initPID();
 
 int main()
 {
@@ -23,6 +25,8 @@ int main()
     float pidRoll, pidPitch, pidThrottle;
 
     
+    initPID();
+
     initGPIO(16,false);
     writeGpio(16, true);
     init GPIO(17,true);
@@ -62,7 +66,16 @@ int main()
 	    x = pose.x;
    	    y = pose.y;
 
-	    
+	    pidPitch=updatePID(setPointX,x,&PID[PITCH]);
+            pidRoll=updatePID(setPointY,y,&PID[ROLL]);
+
+	    /*TODO: get PID for throttle and then do
+	     1500+ constrain stuff. 
+	     figure it out James, I'm tired now.
+
+		-Griffin
+
+	    */	    
 	}
 	std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
