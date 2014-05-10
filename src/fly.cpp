@@ -56,7 +56,7 @@ int main()
 	    //	      << std::endl;
 	    x += fd.flow_x;
 	    y += fd.flow_y;
-	    std::cout << x << " " << y << std::endl;
+	    std::cout << x << " " << y << " " << gd.ground_distance << std::endl;
 	    //std::cout << std::chrono::nanoseconds(dt).count()/10e6 << std::endl;
 	}
 	if (cpe.dataAvailable())
