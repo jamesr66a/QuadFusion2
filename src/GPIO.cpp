@@ -26,7 +26,7 @@ void initGPIO(int gpioNum, bool direction){
     if(!direction) write(fd, "out", 3);
     close(fd);
 
-  }
+  }`
 }
 
 char readGPIO(int gpioNum){
@@ -49,7 +49,7 @@ gpioStatus:
 true: write 1
 flase: write 0
 */
-void writeGpio(int gpioNum, bool gpioStatus){
+void writeGPIO(int gpioNum, bool gpioStatus){
   char buf[25];
   
   sprintf(buf, "/sys/class/gpio/gpio%d/value",gpioNum);
