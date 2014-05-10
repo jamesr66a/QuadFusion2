@@ -27,7 +27,7 @@
 
 #ifndef _AQ_PID_H_
 #define _AQ_PID_H_
-
+float currentTime;
 enum {
   THROTTLE=0,
   PITCH,    
