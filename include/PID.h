@@ -27,9 +27,6 @@
 
 #ifndef _AQ_PID_H_
 #define _AQ_PID_H_
-
-#include <chrono.h>
-
 float currentTime;
 bool inFlight;
 enum {
@@ -74,18 +71,9 @@ void zeroIntegralError() {
   }
 }
 
-float getCurrentTime(){
- std::chrono::steady_clock::time_point tpCurrent=std::chrono::steady_clock::now();
-  return std::chrono::duration_cast<microseconds>(tpCurrent).count();
-
-}
-
 float updatePID(float targetPosition, float currentPosition, struct PIDdata *PIDparameters) {
 
   // AKA PID experiments
-  //TODO::set current time equal to a current time in ms
-  
-  currentTime=getCurrentTime();
   const float deltaPIDTime = (currentTime - PIDparameters->previousPIDTime) / 1000000.0;
 
   PIDparameters->previousPIDTime = currentTime;  // AKA PID experiments
@@ -101,31 +89,7 @@ float updatePID(float targetPosition, float currentPosition, struct PIDdata *PID
   float dTerm = PIDparameters->D * (currentPosition - PIDparameters->lastError) / (deltaPIDTime * 100); // dT fix from Honk
   PIDparameters->lastError = currentPosition;
 
-  return (PIDparameters->P * error) + (PIDparameters->I * PIDparameters->integratedError); //This does not include the dTerm
-
-}
-
-void initPID(){
- PID[THROTTLE].P=1;
- PID[THROTTLE].I=1;
- PID[THROTTLE].D=1;
- PID[THROTTLE].windupGuard=100;
- PID[THROTTLE].previousPIDTime=getCurrentTime();
-
-
- PID[ROLL].P=1;
- PID[ROLL].I=1;
- PID[ROLL].D=1;
- PID[ROLL].windupGuard=100;
- PID[ROLL].previoudPIDTime=getCurrentTime();
-
-
- PID[PITCH].P=1;
- PID[PITCH].I=1;
- PID[PITCH].D=1;
- PID[PITCH].windupGuard=100;
- PID[PITCH].previoudPIDTime=getCurrentTime();
-
+  return (PIDparameters->P * error) + (PIDparameters->I * PIDparameters->integratedError) + dTerm;
 }
 
 
