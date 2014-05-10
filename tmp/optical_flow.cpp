@@ -32479,8 +32479,9 @@ namespace std __attribute__ ((__visibility__ ("default")))
 struct FlowData{
     float flow_x;
     float flow_y;
-    FlowData(float flow_x, float flow_y)
-        : flow_x(flow_x), flow_y(flow_y)
+    float ground_distance;
+    FlowData(float flow_x, float flow_y, float ground_distance)
+        : flow_x(flow_x), flow_y(flow_y), ground_distance(ground_distance)
     {}
  FlowData() {}
 };
@@ -64446,6 +64447,7 @@ void OpticalFlowSensor::loop(std::string device_file)
 
     float flow_x = 0, temp_flow_x = 0;
     float flow_y = 0, temp_flow_y = 0;
+    float ground_distance = 0;
     uint8_t history = 0;
     uint64_t timestamp = -1, base_timestamp = -1;
     while (1)
@@ -64463,8 +64465,9 @@ void OpticalFlowSensor::loop(std::string device_file)
    timestamp = mavlink_msg_optical_flow_get_time_usec(&msg);
    flow_x = mavlink_msg_optical_flow_get_flow_comp_m_x(&msg);
    flow_y = mavlink_msg_optical_flow_get_flow_comp_m_y(&msg);
-   data_points_mutex.lock();
-   data_points.push(FlowData(flow_x, flow_y));
+   ground_distance = mavlink_msg_optical_flow_get_ground_distance(&msg);
+            data_points_mutex.lock();
+   data_points.push(FlowData(flow_x, flow_y, ground_distance));
    ready.store(true);
    data_points_mutex.unlock();
    history = 0;
