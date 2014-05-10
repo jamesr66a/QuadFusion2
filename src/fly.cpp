@@ -21,7 +21,7 @@ int main()
 	
     float x = 0, y = 0;
     float setPointX=0, setPointY=0, setPointZ=0;
-    bool prevFlightStatus=false;
+    bool prevFlightStatus=false, firstRead=true;
     float pidRoll, pidPitch, pidThrottle;
 
     
@@ -65,7 +65,14 @@ int main()
 	
 	    x = pose.x;
    	    y = pose.y;
+	    
+            if(firstRead){
+		std::chrono::steady_clock::time_point tpCurrent=std::chrono::steady_clock::now();
+	        currentTime=std::chrono::duration_cast<microseconds>(tpCurrent).count();
 
+		firstRead=false;
+
+	    }
 	    pidPitch=updatePID(setPointX,x,&PID[PITCH]);
             pidRoll=updatePID(setPointY,y,&PID[ROLL]);
 

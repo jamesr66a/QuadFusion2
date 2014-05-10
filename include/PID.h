@@ -27,6 +27,9 @@
 
 #ifndef _AQ_PID_H_
 #define _AQ_PID_H_
+
+#include <chrono.h>
+
 float currentTime;
 bool inFlight;
 enum {
@@ -75,6 +78,8 @@ float updatePID(float targetPosition, float currentPosition, struct PIDdata *PID
 
   // AKA PID experiments
   //TODO::set current time equal to a current time in ms
+  std::chrono::steady_clock::time_point tpCurrent=std::chrono::steady_clock::now();
+  currentTime=std::chrono::duration_cast<microseconds>(tpCurrent).count();
   const float deltaPIDTime = (currentTime - PIDparameters->previousPIDTime) / 1000000.0;
 
   PIDparameters->previousPIDTime = currentTime;  // AKA PID experiments
