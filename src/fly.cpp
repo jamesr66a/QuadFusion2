@@ -67,8 +67,8 @@ int main()
    	    y = pose.y;
 	    
             if(firstRead){
-		std::chrono::steady_clock::time_point tpCurrent=std::chrono::steady_clock::now();
-	        currentTime=std::chrono::duration_cast<microseconds>(tpCurrent).count();
+		
+	        currentTime=getCurrentTime();
 
 		firstRead=false;
 
